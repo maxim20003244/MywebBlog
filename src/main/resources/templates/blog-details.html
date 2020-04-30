@@ -12,9 +12,20 @@
     <div th:each="el : ${post}"class="alert alert-info mt-2">
         <h1 th:text="${el.title}"/>
         <p th:text="${el.full_text}"/>
-        <p th:text="${el.views}"/>
-        <a th:href="'/blog' + ${el.id} + '/edit'" class="btn btn-warning">Refactor</a>
-        <a th:href="'/blog' + ${el.id} + '/remove'" class="btn btn-warning">Delete</a>
+        <p><b>Views: </b><span th:text="${el.views}"/></p>
+        <a th:href="'/blog/' + ${el.id} + '/edit'  " id="position_form2" class="btn btn-warning">Edit</a><br><br>
+         <style>
+
+      #position_form{
+          margin-left: +2cm;
+          margin-top: -1.65cm;
+
+      }
+         </style>
+        <form id="position_form" th:action="'/blog/'+ ${el.id} + '/remove'" method="post">
+              <button id="bottom-panel" class="btn btn-warning" type="submit">Delete</button>
+        </form>
+
     </div>
 
 </div>

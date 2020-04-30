@@ -1,4 +1,4 @@
-package com.myproject.mywebblog.controller.repo;
+package com.myproject.mywebblog.repo;
 
 import com.myproject.mywebblog.models.Post;
 import org.springframework.data.repository.CrudRepository;

@@ -1,8 +1,7 @@
 package com.myproject.mywebblog.controller;
 
 import com.myproject.mywebblog.models.Post;
-import com.myproject.mywebblog.controller.repo.PostRepository;
-import jdk.nashorn.internal.runtime.regexp.joni.Option;
+import com.myproject.mywebblog.repo.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,15 +38,57 @@ public class BlogController {
         postRepository.save(post);
         return "redirect:/blog";
     }
+
     @GetMapping("/blog/{id}")
     public String blogDetails(@PathVariable(value = "id") long id, Model model) {
-        if(!postRepository.existsById(id)){
+        if (!postRepository.existsById(id)) {
             return "redirect:/blog";
         }
-         Optional<Post> post = postRepository.findById(id);
+
+        Optional<Post> post = postRepository.findById(id);
         ArrayList<Post> res = new ArrayList<>();
         post.ifPresent(res::add);
-        model.addAttribute("post" ,res);
+        model.addAttribute("post", res);
         return "blog-details";
     }
+
+        @GetMapping("/blog/{id}/edit")
+        public String blogEdit(@PathVariable(value = "id") long id, Model model){
+            if (!postRepository.existsById(id)) {
+                return "redirect:/blog";
+            }
+
+            Optional<Post> post = postRepository.findById(id);
+            ArrayList<Post> res = new ArrayList<>();
+            post.ifPresent(res::add);
+            model.addAttribute("post", res);
+            return "blog-edit";
+        }
+    @PostMapping("/blog/{id}/edit")
+    public String blogPostUpdate( @PathVariable(value = "id") long id ,String title,@RequestParam String anons,@RequestParam String full_text, Model model) {
+        Post post  = null;
+        try {
+            post = postRepository.findById(id).orElseThrow(Exception::new);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        post.setTitle(title);
+       post.setAnonos(anons);
+       post.setFull_text(full_text);
+       postRepository.save(post);
+        return "redirect:/blog/{id}";
+    }
+
+    @PostMapping("/blog/{id}/remove")
+    public String blogPostDelete( @PathVariable(value = "id") long id , Model model) throws Exception {
+        Post post  = null;
+        try {
+            post = postRepository.findById(id).orElseThrow(Exception::new);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        postRepository.delete(post);
+        return "redirect:/blog";
+    }
+
 }
